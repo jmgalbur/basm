@@ -1,0 +1,8 @@
+asm -> code
+
+code -> 
+code -> code whitespace
+code -> code hex hex
+
+whitespace := [\t\r\n ]
+hex := [0-9a-fA-F]
