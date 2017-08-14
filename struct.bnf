@@ -1,8 +1,18 @@
 asm -> code
 
 code -> 
-code -> code whitespace
+code -> code space
+code -> code newline
 code -> code hex hex
+code -> code comment
 
-whitespace := [\t\r\n ]
+comment -> slash slash not-newlines
+
+not-newlines -> not-newline
+not-newlines -> not-newlines not-newline
+
+space := [ \t]
 hex := [0-9a-fA-F]
+newline := [\r\n]
+slash := '/'
+not-newline := [^\r\n]
