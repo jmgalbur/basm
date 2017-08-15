@@ -1,18 +1,28 @@
-asm -> code
+asm -> line
+asm -> line lines
 
-code -> 
-code -> code space
-code -> code newline
-code -> code hex hex
-code -> code comment
+lines -> NEWLINE line
+lines -> lines NEWLINE line
 
-comment -> slash slash not-newlines
+line -> opt_code opt_comment
 
-not-newlines -> not-newline
-not-newlines -> not-newlines not-newline
+opt_code -> 
+opt_code -> opt_code SPACE
+opt_code -> opt_code HEX HEX
 
-space := [ \t]
-hex := [0-9a-fA-F]
-newline := [\r\n]
-slash := '/'
-not-newline := [^\r\n]
+opt_comment ->
+opt_comment -> SLASH SLASH opt_comment_content
+
+opt_comment_content -> 
+opt_comment_content -> opt_comment_content HEX
+opt_comment_content -> opt_comment_content SLASH
+opt_comment_content -> opt_comment_content OTHER
+
+SPACE := [ \t]
+HEX := [0-9a-fA-F]
+NEWLINE := [\r\n]
+SLASH := '/'
+OTHER := [^ \t0-9a-fA-F\r\n/]
+
+##
+Thanks to @mdaines with his [context-free grammar tool](https://github.com/mdaines/grammophone) to help make the grammar SLR(1)!
