@@ -14,6 +14,7 @@ opt_comment ->
 opt_comment -> SLASH SLASH opt_comment_content
 
 opt_comment_content -> 
+opt_comment_content -> opt_comment_content SPACE
 opt_comment_content -> opt_comment_content HEX
 opt_comment_content -> opt_comment_content SLASH
 opt_comment_content -> opt_comment_content OTHER
