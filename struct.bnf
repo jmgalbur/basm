@@ -1,8 +1,5 @@
 asm -> line
-asm -> line lines
-
-lines -> NEWLINE line
-lines -> lines NEWLINE line
+asm -> asm NEWLINE line
 
 line -> opt_code opt_comment
 
