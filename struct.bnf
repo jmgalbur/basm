@@ -24,3 +24,127 @@ OTHER := [^ \t0-9a-fA-F\r\n/]
 
 ##
 Thanks to @mdaines with his [context-free grammar tool](https://github.com/mdaines/grammophone) to help make the grammar SLR(1)!
+
+I0
+$start -> .asm $
++asm -> .line
++asm -> .asm NEWLINE line
++line -> .opt_code opt_comment
++opt_code -> .
++opt_code -> .opt_code SPACE
++opt_code -> .opt_code HEX HEX
+
+goto asm I1
+goto line I2
+goto opt_code I3
+reduce opt_code
+
+I1
+$start -> asm .$
+asm -> asm .NEWLINE line
+
+accept
+shift I4
+
+I2
+asm -> line .
+
+reduce asm
+
+I3
+line -> opt_code .opt_comment
+opt_code -> opt_code .SPACE
+opt_code -> opt_code .HEX HEX
++opt_comment -> .
++opt_comment -> .SLASH SLASH opt_comment_content
+
+goto opt_comment I5
+shift SPACE I6
+shift HEX I7
+reduce opt_comment
+shift SLASH I8
+
+I4
+asm -> asm NEWLINE .line
++line -> .opt_code opt_comment
++opt_code -> .
++opt_code -> .opt_code SPACE
++opt_code -> .opt_code HEX HEX
+
+goto line I9
+goto opt_code I3
+reduce opt_code
+
+I5
+line -> opt_code opt_comment .
+
+reduce line
+
+I6
+opt_code -> opt_code SPACE .
+
+reduce opt_code
+
+I7
+opt_code -> opt_code HEX .HEX
+
+shift HEX I10
+
+I8
+opt_comment -> SLASH .SLASH opt_comment_content
+
+shift SLASH I11
+
+I9
+asm -> asm NEWLINE line .
+
+reduce asm
+
+I10
+opt_code -> opt_code HEX HEX .
+
+reduce opt_code
+
+I11
+opt_comment -> SLASH SLASH .opt_comment_content
++opt_comment_content -> .
++opt_comment_content -> .opt_comment_content SPACE
++opt_comment_content -> .opt_comment_content HEX
++opt_comment_content -> .opt_comment_content SLASH
++opt_comment_content -> .opt_comment_content OTHER
+
+goto opt_comment_content I12
+reduce opt_comment_content
+
+I12
+opt_comment -> SLASH SLASH opt_comment_content .
+opt_comment_content -> opt_comment_content .SPACE
+opt_comment_content -> opt_comment_content .HEX
+opt_comment_content -> opt_comment_content .SLASH
+opt_comment_content -> opt_comment_content .OTHER
+
+reduce opt_comment
+shift SPACE I13
+shift HEX I14
+shift SLASH I15
+shift OTHER I16
+
+I13
+opt_comment_content -> opt_comment_content SPACE .
+
+reduce opt_comment_content
+
+I14
+opt_comment_content -> opt_comment_content HEX .
+
+reduce opt_comment_content
+
+I15
+opt_comment_content -> opt_comment_content SLASH .
+
+reduce opt_comment_content
+
+I16
+opt_comment_content -> opt_comment_content OTHER .
+
+reduce opt_comment_content
